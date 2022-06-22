@@ -3,31 +3,32 @@
 
 	import { fly } from 'svelte/transition';
 
-	let show = false;
-	// export let methodType;
-	// export let isUpload = false;
-	// export let isValid = false;
+	export let show = false;
+	export let title;
+	export let clear;
+	export let methodType;
+	export let isUpload = false;
+	export let isValid = false;
 
 	const handleShow = () => {
 		show = true;
-		// methodType = 'post';
+		methodType = 'post';
 	};
 
 	const close = () => {
 		show = false;
+		clear();
 	};
 
-	// $: {
-	// 	if (show) dispatch('validate');
-	// }
+	$: {
+		if (show) dispatch('validate');
+	}
 
 	const dispatch = createEventDispatcher();
 </script>
 
-<button
-	on:click={handleShow}
-	class="text-sm font-medium  hover:text-slate-500"
-	>tambah</button
+<button on:click={handleShow} class=" py-2 text-sm rounded font-medium hover:text-slate-500"
+	>Add {title}</button
 >
 {#if show}
 	<div class=" bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40 ">
@@ -36,22 +37,24 @@
 			class="absolute bg-white w-screen left-0 top-0 h-screen z-50 max-w-lg sm:w-96 sm:h-fit sm:shadow-md sm:mb-10 sm:left-1/2 sm:-translate-x-1/2 sm:top-1/2 sm:-translate-y-1/2 backdrop-blur-xl "
 		>
 			<div class="border-b flex justify-between font-bold p-5 ">
-				<h2>Add Transaksi</h2>
-				<button on:click={close} class="cursor-pointer">&#x2715</button>
+				<h2>Add {title}</h2>
+				<button class="cursor-pointer" on:click={close} disabled={isUpload}>&#x2715</button>
 			</div>
 			<slot />
 			<div class="flex px-5 py-10 gap-2 justify-end">
 				<button
-                    on:click={close}
+					disabled={isUpload}
+					on:click={close}
 					type="button"
 					class="disabled:border-slate-400 inline-block px-6 py-1.5 border-2 border-gray-400 text-gray-400 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
 					>cancel</button
 				>
-				<!-- {#if !isUpload}
+				{#if !isUpload}
 					<button
 						disabled={!isValid}
 						on:click={() => {
 							dispatch('submit');
+							clear();
 						}}
 						type="button"
 						class="disabled:bg-slate-400 inline-block px-6 py-2 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
@@ -75,7 +78,7 @@
 							submit
 						{/if}
 					</button>
-				{/if} -->
+				{/if}
 			</div>
 		</div>
 	</div>

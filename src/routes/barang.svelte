@@ -2,10 +2,13 @@
 	import Modal from '$lib/Modal.svelte';
 	import { barang, fetchbarang } from '../store/barang';
 	import { onMount } from 'svelte';
+	import Input from '$lib/Input.svelte';
 
 	let loading = false;
 	let data = [];
 	let cari = '';
+	let isUpload = false;
+	let show = false;
 
 	onMount(async () => await onLoad());
 	const onLoad = async () => {
@@ -15,6 +18,16 @@
 		data = $barang;
 
 		loading = false;
+	};
+
+	const handlePost = async () => {
+		isUpload = true;
+
+		await postCustomer(newCustomer);
+		show = false;
+		await onLoad();
+
+		isUpload = false;
 	};
 
 	$: {
@@ -27,7 +40,12 @@
 </script>
 
 <div class="flex justify-between mb-5">
-	<Modal />
+	<Modal>
+		<div class="px-5 mt-3">
+			<Input name="Nama" placeholder="Nama" />
+			<Input name="Price" placeholder="Price" />
+		</div>
+	</Modal>
 	<div>
 		Cari
 		<input type="text" class="border" bind:value={cari} />

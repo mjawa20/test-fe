@@ -1,11 +1,19 @@
 <script>
 	import Modal from '$lib/Modal.svelte';
-	import { customer, fetchcustomer } from '../store/customer';
+	import { customer, fetchcustomer, postCustomer } from '../store/customer';
 	import { onMount } from 'svelte';
+	import Input from '$lib/Input.svelte';
+	import { validate } from '../utils';
 
 	let loading = false;
 	let data = [];
-    let cari = "";
+	let cari = '';
+	let isUpload = false;
+	let show = false;
+	let newCustomer = {
+		nama: '',
+		telp: ''
+	};
 
 	onMount(async () => await onLoad());
 	const onLoad = async () => {
@@ -16,19 +24,39 @@
 
 		loading = false;
 	};
+
+	const handlePost = async () => {
+		isUpload = true;
+
+		await postCustomer(newCustomer);
+		show = false;
+		await onLoad();
+
+		isUpload = false;
+	};
+
 	$: {
-        if (cari) {
-            data = data.filter((item) => item.nama.toLowerCase().includes(cari.toLowerCase()));
-        }else{
-            data = [...$customer]
-        }
-    };
+		if (cari) {
+			data = data.filter((item) => item.nama.toLowerCase().includes(cari.toLowerCase()));
+		} else {
+			data = [...$customer];
+		}
+	}
 </script>
 
 <div class="flex justify-between mb-5">
-	<Modal >
-        jiashd
-    </Modal> 
+	<Modal
+		on:submit={handlePost}
+		bind:show
+		title="Category"
+		{isUpload}
+		isValid={validate(newCustomer)}
+	>
+		<div class="px-5 mt-3">
+			<Input name="nama" bind:value={newCustomer.nama} />
+			<Input name="telp" bind:value={newCustomer.telp} />
+		</div>
+	</Modal>
 	<div>
 		Cari
 		<input type="text" class="border" bind:value={cari} />
@@ -51,7 +79,7 @@
 		{:else if data}
 			{#each data as customer, index}
 				<tr>
-					<td>{index +1}</td>
+					<td>{index + 1}</td>
 					<td>{customer.kode}</td>
 					<td>{customer.nama}</td>
 					<td>{customer.telp}</td>

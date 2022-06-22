@@ -12,19 +12,10 @@ export const fetchcustomer = async () => {
 		console.error(error.response);
 	}
 };
-export const fetchCarousel = async (query) => {
-	try {
-		const res = await axios.get(`/api/carousel/${query}}`);
-		const body = await res.data;
-		customer.set(body.data);
-	} catch (error) {
-		console.error(error.response);
-	}
-};
 
-export const postCarousel = async (newcustomer) => {
+export const postCustomer = async (newcustomer) => {
 	try {
-		await axios.post('/api/carousel', newcustomer)
+		await axios.post('http://127.0.0.1:8000/api/customer', newcustomer);
 	} catch (error) {
 		console.error(error.response);
 	}
