@@ -28,7 +28,7 @@
 </script>
 
 <button on:click={handleShow} class=" py-2 text-sm rounded font-medium hover:text-slate-500"
-	>Add {title}</button
+	>Tambah {title}</button
 >
 {#if show}
 	<div class=" bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40 ">
