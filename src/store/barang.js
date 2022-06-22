@@ -12,6 +12,15 @@ export const fetchbarang = async () => {
 		console.error(error.response);
 	}
 };
+
+export const postBarang = async (newBarang) => {
+	try {
+		await axios.post('http://127.0.0.1:8000/api/barang', newBarang)
+	} catch (error) {
+		console.error(error.response);
+	}
+}
+
 // export const fetchCarousel = async (query) => {
 // 	try {
 // 		const res = await axios.get(`/api/carousel/${query}}`);
@@ -22,13 +31,6 @@ export const fetchbarang = async () => {
 // 	}
 // };
 
-// export const postCarousel = async (newcustomer) => {
-// 	try {
-// 		await axios.post('/api/carousel', newcustomer)
-// 	} catch (error) {
-// 		console.error(error.response);
-// 	}
-// }
 
 // export const deletecarousel = async (id) => {
 // 	try {

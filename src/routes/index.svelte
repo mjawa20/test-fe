@@ -1,13 +1,9 @@
 <script>
-	import Modal from '$lib/Modal.svelte';
+	import Modal from '$lib/utils/Modal.svelte';
 </script>
 
 <div class="w-full md:w-1/2 space-y-3">
 	<div class="bg-slate-200 ">Transaksi</div>
-	<div class="flex ">
-		<p style="min-width: 100px;" for="no">No</p>
-		<p>172637gas</p>
-	</div>
 	<div class="flex items-center">
 		<p style="min-width: 100px;">tanggal</p>
 		<input
@@ -30,18 +26,54 @@
 </div>
 
 <h1>Keranjang</h1>
-<hr>
-<div class="">
-    <div class="w-80 bg-slate-200 text-center">
-        <div>
-            <h5>product name</h5>
-            <p class="">3 x Rp 20000</p>
-            <div class="flex justify-center">
-                <span class="bg-red-200">80%</span>
-                <p class="line-through">Rp 20000</p>
-            </div>
-        </div>
-    </div>
+<hr />
+<div class="py-4 grid gap-4 md:grid-cols-2 grid-cols-1 my-5">
+	<div class="w-full bg-slate-200 p-5">
+		<div class="flex justify-between items-center">
+			<div>
+				<h5>product name</h5>
+				<h5>product name</h5>
+				<p class="">3 x Rp 20000</p>
+			</div>
+			<div>
+				<button>hapus</button>
+				<button>ubah</button>
+			</div>
+		</div>
+		<div style="height: 1px;" class="w-full bg-black" />
+		<div class="flex justify-between items-center">
+			total
+			<div>
+				<h4>Rp323929</h4>
+				<div class="flex">
+					<span class="bg-red-200">80%</span>
+					<p class="line-through">Rp 20000</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<hr />
+<div class="flex justify-end mt-8">
+	<div class="w-1/4">
+		<div class="flex justify-between ">
+			<p>SubTotal</p>
+			<p>Rp10000</p>
+		</div>
+		<div class="flex justify-between">
+			<p>Diskon</p>
+			<p>Rp10000</p>
+		</div>
+		<div class="flex justify-between">
+			<p>Ongkir</p>
+			<p>Rp10000</p>
+		</div>
+	</div>
+</div>
+<div class="flex justify-evenly w-full">
+	<button>Simpan</button>
+	<button>Batal</button>
 </div>
 <!-- <table class="table-auto w-full">
 	<thead class="bg-slate-200">

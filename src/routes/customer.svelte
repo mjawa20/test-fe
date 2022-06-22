@@ -1,8 +1,8 @@
 <script>
-	import Modal from '$lib/Modal.svelte';
+	import Modal from '$lib/utils/Modal.svelte';
 	import { customer, fetchcustomer, postCustomer } from '../store/customer';
 	import { onMount } from 'svelte';
-	import Input from '$lib/Input.svelte';
+	import Input from '$lib/utils/Input.svelte';
 	import { validate } from '../utils';
 
 	let loading = false;
@@ -48,7 +48,7 @@
 	<Modal
 		on:submit={handlePost}
 		bind:show
-		title="Category"
+		title="Customer"
 		{isUpload}
 		isValid={validate(newCustomer)}
 	>

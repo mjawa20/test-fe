@@ -1,5 +1,5 @@
 <script>
-	import Navbar from '$lib/Navbar.svelte';
+	import Navbar from '$lib/utils/Navbar.svelte';
 </script>
 
 <div class="mx-auto max-w-5xl px-7">
