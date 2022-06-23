@@ -18,7 +18,7 @@ export const postSales = async (newSales, kode) => {
 			transaksi_kode: kode,
 			data: newSales,
 		}
-		await axios.post(`http://127.0.0.1:8000/api/sales`, JSON.stringify(data));
+		await axios.post(`http://127.0.0.1:8000/api/sales`, data);
 	} catch (error) {
 		console.error(error.response);
 	}

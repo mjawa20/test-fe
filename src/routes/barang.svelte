@@ -99,8 +99,8 @@
 				<tr>
 					<td>{index}</td>
 					<td>{barang.kode}</td>
-					<td>Malcolm Lockyer</td>
-					<td>Malcolm Lockyer</td>
+					<td>{barang.nama}</td>
+					<td>Rp{barang.harga}</td>
 				</tr>
 			{/each}
 		{:else if !data.length}

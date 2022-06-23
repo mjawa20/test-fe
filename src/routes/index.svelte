@@ -85,6 +85,8 @@
 			const kode = await res.data.kode;
 			await postSales($cart, kode);
 			alert('Sukses menyimpan barang');
+			browser && localStorage.removeItem('cart');
+			location.reload()
 		} else {
 			alert('gagal, kolom tanggal dan cutomer harus diisi');
 		}
@@ -167,7 +169,7 @@
 			<div class="flex space-x-5">
 				<InputNum placeholder="qty" bind:value={salesDets.qty} />
 				<InputNum
-					placeholder="diskon (optional)"
+					placeholder="diskon % (optional) "
 					bind:value={salesDets.diskon_pct}
 					opsional={true}
 				/>
