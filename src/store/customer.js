@@ -21,9 +21,9 @@ export const postCustomer = async (newcustomer) => {
 	}
 }
 
-export const deletecarousel = async (id) => {
+export const deleteCustomer = async (id) => {
 	try {
-		await axios.delete('/api/carousel/' + id)
+		await axios.delete('http://127.0.0.1:8000/api/customer/' + id)
 	} catch (error) {
 		console.error(error.response);
 	}

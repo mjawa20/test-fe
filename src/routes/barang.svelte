@@ -76,7 +76,7 @@
 		</div>
 	</Modal>
 	<div class="flex items-center mt-2 md:mt-0">
-		<p class="md:block hidden md:mr-3">Cari</p>	
+		<p class="md:block hidden md:mr-3">Cari</p>
 		<input placeholder="Cari" type="text" class="border p-1 rounded w-full" bind:value={cari} />
 	</div>
 </div>
@@ -86,7 +86,7 @@
 			<tr>
 				<th width="10%">No</th>
 				<th width="24%">Kode</th>
-				<th width="40%">Nama</th>
+				<th width="30%">Nama</th>
 				<th width="25%">Harga</th>
 			</tr>
 		</thead>

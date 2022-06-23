@@ -1,6 +1,6 @@
 <script>
 	import Modal from '$lib/utils/Modal.svelte';
-	import { customer, fetchcustomer, postCustomer } from '../store/customer';
+	import { customer, deleteCustomer, fetchcustomer, postCustomer } from '../store/customer';
 	import { onMount } from 'svelte';
 	import Input from '$lib/utils/Input.svelte';
 	import { validate } from '../utils';
