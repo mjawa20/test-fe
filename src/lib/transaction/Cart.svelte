@@ -1,24 +1,37 @@
-<div class="w-full bg-slate-200 p-5">
-	<div class="flex justify-between items-center">
-		<div>
-			<h5>product name</h5>
-			<h5>product name</h5>
-			<p class="">3 x Rp 20000</p>
+<script>
+	export let barang;
+	export let cart;
+	$: console.log(cart, 'asd');
+	$: console.log(barang, '------------');
+</script>
+
+{#if cart && barang}
+	<div class="w-full bg-slate-200 p-5">
+		<div class="flex justify-between items-center">
+			<div>
+				<h5>{barang.kode}</h5>
+				<h5>{barang.nama}</h5>
+				<p class="">{cart.qty} x Rp {cart.harga_diskon}</p>
+				{#if cart.diskon_pct}
+					<div class="flex">
+						<span class="bg-red-200">{cart.diskon_pct}%</span>
+						<p class="line-through">Rp {cart.harga_bandrol}</p>
+					</div>
+				{/if}
+			</div>
+			<div>
+				<button>hapus</button>
+				<button>ubah</button>
+			</div>
 		</div>
-		<div>
-			<button>hapus</button>
-			<button>ubah</button>
-		</div>
-	</div>
-	<div style="height: 1px;" class="w-full bg-black" />
-	<div class="flex justify-between items-center">
-		total
-		<div>
-			<h4>Rp323929</h4>
-			<div class="flex">
-				<span class="bg-red-200">80%</span>
-				<p class="line-through">Rp 20000</p>
+		<div style="height: 1px;" class="w-full bg-black" />
+		<div class="flex justify-between items-center">
+			total
+			<div>
+				<h4>Rp{cart.total}</h4>
 			</div>
 		</div>
 	</div>
-</div>
+{:else}
+	klajs
+{/if}

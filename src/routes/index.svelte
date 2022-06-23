@@ -4,9 +4,14 @@
 	import { customer, fetchcustomer } from '../store/customer';
 	import { onMount } from 'svelte';
 	import { cart } from '../store/cart';
-import Input from '$lib/utils/Input.svelte';
+	import Input from '$lib/utils/Input.svelte';
+	import InputNum from '$lib/utils/InputNum.svelte';
+	import { barang, fetchbarang } from '../store/barang';
+	import { getBarang, validate } from '../utils';
+	import { browser } from '$app/env';
 
 	let customers = [];
+	let barangs = [];
 	let loading = false;
 
 	let sales = {
@@ -19,11 +24,11 @@ import Input from '$lib/utils/Input.svelte';
 	};
 
 	let salesDets = {
-		sales_id: 0,
-		barang_id: 0,
+		sales_id: null,
+		barang_id: null,
 		harga_bandrol: 0,
-		qty: 0,
-		diskon_pct: 0,
+		qty: null,
+		diskon_pct: null,
 		diskon_nilai: 0,
 		harga_diskon: 0,
 		total: 0
@@ -36,13 +41,27 @@ import Input from '$lib/utils/Input.svelte';
 	const load = async () => {
 		loading = true;
 		await fetchcustomer();
+		await fetchbarang();
 		customers = $customer;
+		barangs = $barang;
 		loading = false;
 	};
 
 	const handleAddCart = () => {
-		cart.set([salesDets, ...$cart]);
+		const selectedBarang = getBarang(barangs, salesDets.barang_id)[0];
+
+		salesDets.harga_bandrol = selectedBarang.harga;
+		salesDets.diskon_nilai = Math.round(selectedBarang.harga * (salesDets.diskon_pct / 100));
+		salesDets.harga_diskon = salesDets.harga_bandrol - salesDets.diskon_nilai;
+		salesDets.total = salesDets.harga_diskon * salesDets.qty;
+		let newData = $cart.length
+			? JSON.stringify([salesDets, ...$cart])
+			: JSON.stringify([salesDets]);
+
+		browser && localStorage.setItem('cart', newData);
+		cart.set(JSON.parse(newData));
 	};
+	$: console.log($cart);
 </script>
 
 <div class="w-full md:w-1/2 space-y-3">
@@ -73,17 +92,47 @@ import Input from '$lib/utils/Input.svelte';
 
 <div class="flex items-center justify-between my-3">
 	<h1>Keranjang</h1>
-	<Modal title="cart" >
+	<Modal
+		on:submit={handleAddCart}
+		title="cart"
+		isValid={validate(salesDets, [
+			'sales_id',
+			'harga_bandrol',
+			'diskon_nilai',
+			'harga_diskon',
+			'diskon_pct',
+			'total'
+		])}
+	>
 		<div class="px-5 mt-3">
-			<Input name="Nama" placeholder="Nama"  />
-			
-		</div>	
+			<select
+				bind:value={salesDets.barang_id}
+				class="mb-5
+		disabled:bg-slate-100
+		border border-gray-300 text-xs font-bold px-2 py-2 w-full rounded-md"
+			>
+				<option selected value={null}>Barang</option>
+				{#each barangs as barang}
+					<option value={barang.id}>{barang.nama}</option>
+				{/each}
+			</select>
+			<div class="flex space-x-5">
+				<InputNum placeholder="qty" bind:value={salesDets.qty} />
+				<InputNum
+					placeholder="diskon (optional)"
+					bind:value={salesDets.diskon_pct}
+					opsional={true}
+				/>
+			</div>
+		</div>
 	</Modal>
 </div>
 <hr />
 {#if $cart.length}
 	<div class="py-4 grid gap-4 md:grid-cols-2 grid-cols-1 my-5">
-		<Cart />
+		{#each $cart as cart}
+			<Cart {cart} barang={getBarang(barangs, cart.barang_id)[0]} />
+		{/each}
 	</div>
 	<hr />
 	<div class="flex justify-end mt-8">

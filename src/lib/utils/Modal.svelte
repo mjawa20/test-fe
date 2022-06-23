@@ -5,7 +5,7 @@
 
 	export let show = false;
 	export let title;
-	export let clear;
+	// export let clear;
 	export let methodType;
 	export let isUpload = false;
 	export let isValid = false;
@@ -17,7 +17,6 @@
 
 	const close = () => {
 		show = false;
-		clear();
 	};
 
 	$: {
@@ -54,7 +53,7 @@
 						disabled={!isValid}
 						on:click={() => {
 							dispatch('submit');
-							clear();
+							close();
 						}}
 						type="button"
 						class="disabled:bg-slate-400 inline-block px-6 py-2 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"

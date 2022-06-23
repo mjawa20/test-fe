@@ -1,34 +1,15 @@
-import axios from 'axios';
-import { writable } from 'svelte/store';
+import { get, writable } from "svelte/store";
+import { browser } from "$app/env";
+
+let stored = browser && localStorage.getItem('cart');
+
+console.log(JSON.parse(stored))
 
 export const cart = writable([]);
-
-
-
-
-// export const fetchCarousel = async (query) => {
-// 	try {
-// 		const res = await axios.get(`/api/carousel/${query}}`);
-// 		const body = await res.data;
-// 		customer.set(body.data);
-// 	} catch (error) {
-// 		console.error(error.response);
-// 	}
-// };
-
-
-// export const deletecarousel = async (id) => {
-// 	try {
-// 		await axios.delete('/api/carousel/' + id)
-// 	} catch (error) {
-// 		console.error(error.response);
-// 	}
-// }
-
-// export const updatecarousel = async (newcarousel) => {
-// 	try {
-// 		await axios.put('/api/carousel/',newcarousel)
-// 	} catch (error) {
-// 		console.error(error.response);
-// 	}
-// }
+console.log('---------AA');
+const fetchCart = () => {
+    console.log(JSON.parse(stored),'----')
+    cart.set(JSON.parse(stored))
+    console.log(get(cart),'cart');
+}
+fetchCart();
