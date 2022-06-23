@@ -6,13 +6,13 @@
 	let data = [];
 	let cari = '';
 
-    const getOnlyDate = (date)=>{
-        return date.split(' ')[0];
-    }
+	const getOnlyDate = (date) => {
+		return date.split(' ')[0];
+	};
 	onMount(async () => await onLoad());
 	const onLoad = async () => {
-        loading = true;
-        
+		loading = true;
+
 		await fetchtransaksi();
 		data = $transaksi;
 
@@ -49,9 +49,9 @@
 	<tbody>
 		{#if loading}
 			<tr>
-				<td colspan="4" class="text-center">loading...</td>
+				<td colspan="8" class="text-center">loading...</td>
 			</tr>
-		{:else if data}
+		{:else if data.length}
 			{#each data as transaksi, index}
 				<tr>
 					<td>{index + 1}</td>
@@ -64,9 +64,9 @@
 					<td>{transaksi.total_bayar}</td>
 				</tr>
 			{/each}
-		{:else if !loading && !data}
+		{:else}
 			<tr>
-				<td colspan="4" class="text-center">emmpty data</td>
+				<td colspan="8" class="text-center">emmpty data</td>
 			</tr>
 		{/if}
 	</tbody>

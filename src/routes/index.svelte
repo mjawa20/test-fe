@@ -7,9 +7,18 @@
 	import Input from '$lib/utils/Input.svelte';
 	import InputNum from '$lib/utils/InputNum.svelte';
 	import { barang, fetchbarang } from '../store/barang';
-	import { getBarang, validate } from '../utils';
+	import {
+		clearData,
+		countSubTotal,
+		countTotalBayar,
+		getBarang,
+		inputNumberLimit,
+		validate
+	} from '../utils';
 	import { browser } from '$app/env';
 	import { uid } from 'uid';
+	import { postTransaksi } from '../store/transaksi';
+	import { postSales } from '../store/sales';
 
 	let customers = [];
 	let barangs = [];
@@ -65,18 +74,40 @@
 
 		let newData = $cart ? JSON.stringify([salesDets, ...$cart]) : JSON.stringify([salesDets]);
 		setNewCart(newData);
+
+		clearData(salesDets, ['sales_id', 'harga_bandrol', 'diskon_nilai', 'harga_diskon', 'total']);
+	};
+
+	const handleSave = async () => {
+		loading = true;
+		if (sales.cust_id || sales.tgl) {
+			const res = await postTransaksi(sales);
+			const kode = await res.data.kode;
+			await postSales($cart, kode);
+			alert('Sukses menyimpan barang');
+		} else {
+			alert('gagal, kolom tanggal dan cutomer harus diisi');
+		}
+		loading = false;
 	};
 
 	const handleDelete = (event) => {
 		const filteredCart = $cart.filter((item) => {
-			console.log(item.id, 'blblblblb',event.detail);
 			return item.id !== event.detail;
 		});
-		console.log('-----------=---------------', filteredCart, '-----', event.detail);
 		setNewCart(JSON.stringify(filteredCart));
 	};
 
-	$: console.log($cart);
+	$: {
+		if ($cart) {
+			sales.subtotal = countSubTotal($cart);
+		}
+		salesDets.diskon_pct = inputNumberLimit(salesDets.diskon_pct, 99, 0);
+		salesDets.qty = inputNumberLimit(salesDets.qty, 999, 0);
+		sales.diskon = inputNumberLimit(sales.diskon, sales.subtotal, 0);
+		sales.ongkir = inputNumberLimit(sales.ongkir, 9999999999, 0);
+		sales.total_bayar = countTotalBayar(sales);
+	}
 </script>
 
 <div class="w-full md:w-1/2 space-y-3">
@@ -84,6 +115,7 @@
 	<div class="flex items-center">
 		<p style="min-width: 100px;">tanggal</p>
 		<input
+			bind:value={sales.tgl}
 			type="date"
 			class="
 		disabled:bg-slate-100
@@ -93,11 +125,12 @@
 	<div class="flex ">
 		<p style="min-width: 100px;">Customer</p>
 		<select
+			bind:value={sales.cust_id}
 			class="
 		disabled:bg-slate-100
 		border border-gray-300 text-xs font-bold px-2 py-2 w-full rounded-md"
 		>
-			<option selected value={null}>Customer</option>
+			<option selected value={0}>Customer</option>
 			{#each customers as customer}
 				<option value={customer.id}>{customer.nama}</option>
 			{/each}
@@ -143,36 +176,13 @@
 	</Modal>
 </div>
 <hr />
-{#if $cart.length}
-	<div class="py-4 grid gap-4 md:grid-cols-2 grid-cols-1 my-5">
-		{#each $cart as cart}
-			<Cart on:delete={handleDelete} {cart} barang={getBarang(barangs, cart.barang_id)[0]} />
-		{/each}
-	</div>
-	<hr />
-	<div class="flex justify-end mt-8">
-		<div class="w-1/4">
-			<div class="flex justify-between ">
-				<p>SubTotal</p>
-				<p>Rp10000</p>
-			</div>
-			<div class="flex justify-between">
-				<p>Diskon</p>
-				<p>Rp10000</p>
-			</div>
-			<div class="flex justify-between">
-				<p>Ongkir</p>
-				<p>Rp10000</p>
-			</div>
-		</div>
-	</div>
-	<div class="flex justify-evenly w-full">
-		<button>Simpan</button>
-		<button>Batal</button>
-	</div>
-{:else}
-	<div class="text-center my-10">
-		<p>Keranjang Kosong harap tambahkan Keranjang</p>
-		<button class="bg-slate-200 p-2 rounded mt-2">Tambah Keranjang </button>
-	</div>
-{/if}
+
+<Cart
+	cart={$cart}
+	{barangs}
+	on:delete={handleDelete}
+	on:save={handleSave}
+	{sales}
+	bind:diskon={sales.diskon}
+	bind:ongkir={sales.ongkir}
+/>

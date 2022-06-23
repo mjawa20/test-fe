@@ -12,3 +12,12 @@ export const fetchtransaksi = async () => {
 		console.error(error.response);
 	}
 };
+
+export const postTransaksi = async (newTransaksi) => {
+	try {
+		const res = await axios.post(`http://127.0.0.1:8000/api/transaksi`, newTransaksi);
+		return res.data;
+	} catch (error) {
+		console.error(error.response);
+	}
+};

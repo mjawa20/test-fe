@@ -76,7 +76,7 @@
 			<tr>
 				<td colspan="4" class="text-center">loading...</td>
 			</tr>
-		{:else if data}
+		{:else if data.length}
 			{#each data as customer, index}
 				<tr>
 					<td>{index + 1}</td>
@@ -85,7 +85,7 @@
 					<td>{customer.telp}</td>
 				</tr>
 			{/each}
-		{:else if !loading && !data}
+		{:else}
 			<tr>
 				<td colspan="4" class="text-center">emmpty data</td>
 			</tr>

@@ -1,41 +1,64 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
 
-	export let barang;
+	import { getBarang } from '../../utils';
+	import CartItem from './CartItem.svelte';
+
 	export let cart;
+	export let barangs;
+	export let sales;
+	export let diskon;
+	export let ongkir;
 
 	const dispatch = createEventDispatcher();
-	$: console.log(cart, 'asd');
-	$: console.log(barang, '------------');
 </script>
 
-{#if cart && barang}
-	<div class="w-full bg-slate-200 p-5">
-		<div class="flex justify-between items-center">
-			<div>
-				<h5>{barang.kode}</h5>
-				<h5>{barang.nama}</h5>
-				<p class="">{cart.qty} x Rp {cart.harga_diskon}</p>
-				{#if cart.diskon_pct}
-					<div class="flex">
-						<span class="bg-red-200">{cart.diskon_pct}%</span>
-						<p class="line-through">Rp {cart.harga_bandrol}</p>
-					</div>
-				{/if}
+{#if cart.length}
+	<div class="py-4 grid gap-4 md:grid-cols-2 grid-cols-1 my-5">
+		{#each cart as cart}
+			<CartItem on:delete {cart} barang={getBarang(barangs, cart.barang_id)[0]} />
+		{/each}
+	</div>
+	<hr />
+	<div class="flex justify-end mt-8">
+		<div class="w-1/3 space-y-1">
+			<div class="flex justify-between ">
+				<p>SubTotal</p>
+				<p>Rp{sales.subtotal}</p>
 			</div>
-			<div>
-				<button on:click={() => dispatch('delete', cart.id)}>hapus</button>
-				<button>ubah</button>
+			<div class="flex justify-between">
+				<p>Diskon</p>
+				<p>
+					Rp <input
+						class="w-28 text-right border border-slate-300 ml-2"
+						type="number"
+						bind:value={diskon}
+					/>
+				</p>
 			</div>
-		</div>
-		<div style="height: 1px;" class="w-full bg-black" />
-		<div class="flex justify-between items-center">
-			total
-			<div>
-				<h4>Rp{cart.total}</h4>
+			<div class="flex justify-between">
+				<p>Ongkir</p>
+				<p>
+					Rp <input
+						class="w-28 text-right border border-slate-300 ml-2"
+						type="number"
+						bind:value={ongkir}
+					/>
+				</p>
+			</div>
+			<div class="flex justify-between ">
+				<p>Total Bayar</p>
+				<p>Rp{sales.total_bayar}</p>
 			</div>
 		</div>
 	</div>
+	<div class="flex justify-evenly w-full mt-10">
+		<button on:click={() => dispatch('save')}>Simpan</button>
+		<button>Batal</button>
+	</div>
 {:else}
-	Loading...
+	<div class="text-center my-10">
+		<p>Keranjang Kosong harap tambahkan Keranjang</p>
+		<button class="bg-slate-200 p-2 rounded mt-2">Tambah Keranjang </button>
+	</div>
 {/if}

@@ -12,9 +12,13 @@ export const fetchSales = async () => {
 		console.error(error.response);
 	}
 };
-export const postSales = async (newSales) => {
+export const postSales = async (newSales, kode) => {
 	try {
-		await axios.post(`http://127.0.0.1:8000/api/sales`, newSales);
+		const data = {
+			transaksi_kode: kode,
+			data: newSales,
+		}
+		await axios.post(`http://127.0.0.1:8000/api/sales`, JSON.stringify(data));
 	} catch (error) {
 		console.error(error.response);
 	}
