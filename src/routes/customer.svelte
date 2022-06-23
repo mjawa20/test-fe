@@ -44,7 +44,7 @@
 	}
 </script>
 
-<div class="flex justify-between mb-5">
+<div class="flex flex-col md:flex-row md:justify-between mb-5">
 	<Modal
 		on:submit={handlePost}
 		bind:show
@@ -57,9 +57,9 @@
 			<Input name="telp" bind:value={newCustomer.telp} />
 		</div>
 	</Modal>
-	<div>
-		Cari
-		<input type="text" class="border" bind:value={cari} />
+	<div class="flex items-center mt-2 md:mt-0">
+		<p class="md:block hidden md:mr-3">Cari</p>
+		<input placeholder="Cari" type="text" class="border p-1 rounded w-full" bind:value={cari} />
 	</div>
 </div>
 <table class="table-auto w-full">

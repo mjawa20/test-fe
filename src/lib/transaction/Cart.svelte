@@ -1,4 +1,6 @@
 <script>
+	import { browser } from '$app/env';
+
 	import { createEventDispatcher } from 'svelte';
 
 	import { getBarang } from '../../utils';
@@ -16,12 +18,12 @@
 {#if cart.length}
 	<div class="py-4 grid gap-4 md:grid-cols-2 grid-cols-1 my-5">
 		{#each cart as cart}
-			<CartItem on:delete {cart} barang={getBarang(barangs, cart.barang_id)[0]} />
+			<CartItem on:delete on:update {cart} barang={getBarang(barangs, cart.barang_id)[0]} />
 		{/each}
 	</div>
 	<hr />
-	<div class="flex justify-end mt-8">
-		<div class="w-1/3 space-y-1">
+	<div class="md:flex md:justify-end mx-1 mt-8">
+		<div class="md:w-1/3 space-y-1 font-medium">
 			<div class="flex justify-between ">
 				<p>SubTotal</p>
 				<p>Rp{sales.subtotal}</p>
@@ -52,9 +54,14 @@
 			</div>
 		</div>
 	</div>
-	<div class="flex justify-evenly w-full mt-10">
-		<button on:click={() => dispatch('save')}>Simpan</button>
-		<button>Batal</button>
+	<div class="flex justify-end space-x-5 w-full my-10">
+		<button class="bg-slate-300 p-2 rounded" on:click={() => dispatch('save')}>Simpan</button>
+		<button
+			on:click={() => {
+				browser && localStorage.removeItem('cart');
+				location.reload();
+			}}>clear</button
+		>
 	</div>
 {:else}
 	<div class="text-center my-10">

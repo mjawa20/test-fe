@@ -5,7 +5,6 @@
 
 	export let show = false;
 	export let title;
-	// export let clear;
 	export let methodType;
 	export let isUpload = false;
 	export let isValid = false;

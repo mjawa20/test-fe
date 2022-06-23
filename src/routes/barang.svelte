@@ -46,7 +46,7 @@
 	}
 </script>
 
-<div class="flex justify-between mb-5">
+<div class="flex flex-col md:flex-row md:justify-between mb-5">
 	<Modal
 		on:submit={handlePost}
 		bind:show
@@ -75,38 +75,40 @@
 			</label>
 		</div>
 	</Modal>
-	<div>
-		Cari
-		<input type="text" class="border" bind:value={cari} />
+	<div class="flex items-center mt-2 md:mt-0">
+		<p class="md:block hidden md:mr-3">Cari</p>	
+		<input placeholder="Cari" type="text" class="border p-1 rounded w-full" bind:value={cari} />
 	</div>
 </div>
-<table class="table-auto w-full">
-	<thead class="bg-slate-200">
-		<tr>
-			<th width="10%">No</th>
-			<th width="24%">Kode</th>
-			<th width="40%">Nama</th>
-			<th width="25%">Harga</th>
-		</tr>
-	</thead>
-	<tbody>
-		{#if loading}
+<div class="overflow-x-auto">
+	<table style="min-width: 400px;" class="table-auto w-full border-collapse">
+		<thead class="bg-slate-200">
 			<tr>
-				<td colspan="4" class="text-center">loading...</td>
+				<th width="10%">No</th>
+				<th width="24%">Kode</th>
+				<th width="40%">Nama</th>
+				<th width="25%">Harga</th>
 			</tr>
-		{:else if data.length}
-			{#each data as barang, index}
+		</thead>
+		<tbody>
+			{#if loading}
 				<tr>
-					<td>{index}</td>
-					<td>{barang.kode}</td>
-					<td>{barang.nama}</td>
-					<td>Rp{barang.harga}</td>
+					<td colspan="4" class="text-center">loading...</td>
 				</tr>
-			{/each}
-		{:else if !data.length}
-			<tr>
-				<td colspan="4" class="text-center">empty data</td>
-			</tr>
-		{/if}
-	</tbody>
-</table>
+			{:else if data.length}
+				{#each data as barang, index}
+					<tr>
+						<td>{index + 1}</td>
+						<td>{barang.kode}</td>
+						<td>{barang.nama}</td>
+						<td>Rp{barang.harga}</td>
+					</tr>
+				{/each}
+			{:else if !data.length}
+				<tr>
+					<td colspan="4" class="text-center">empty data</td>
+				</tr>
+			{/if}
+		</tbody>
+	</table>
+</div>

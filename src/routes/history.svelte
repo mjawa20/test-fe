@@ -27,47 +27,49 @@
 	}
 </script>
 
-<div class="flex justify-end mb-5">
-	<div>
-		Cari
-		<input type="text" class="border" bind:value={cari} />
+<div class="md:flex md:justify-end mb-5">
+	<div class="flex items-center mt-2 md:mt-0">
+		<p class="md:block hidden md:mr-3">Cari</p>
+		<input placeholder="Cari" type="text" class="border p-1 rounded w-full" bind:value={cari} />
 	</div>
 </div>
-<table class="table-auto w-full">
-	<thead class="bg-slate-200">
-		<tr>
-			<th width="5%">No</th>
-			<th width="10%">Kode</th>
-			<th width="15%">tanggal</th>
-			<th width="20%">Nama Customer</th>
-			<th width="13%">SubTotal</th>
-			<th width="11%">Diskon</th>
-			<th width="11%">ongkir</th>
-			<th width="15%">total</th>
-		</tr>
-	</thead>
-	<tbody>
-		{#if loading}
+<div class="overflow-x-auto">
+	<table style="min-width: 700px;" class="table-auto w-full">
+		<thead class="bg-slate-200">
 			<tr>
-				<td colspan="8" class="text-center">loading...</td>
+				<th width="5%">No</th>
+				<th width="10%">Kode</th>
+				<th width="15%">tanggal</th>
+				<th width="20%">Nama Customer</th>
+				<th width="13%">SubTotal</th>
+				<th width="11%">Diskon</th>
+				<th width="11%">ongkir</th>
+				<th width="15%">total</th>
 			</tr>
-		{:else if data.length}
-			{#each data as transaksi, index}
+		</thead>
+		<tbody>
+			{#if loading}
 				<tr>
-					<td>{index + 1}</td>
-					<td>{transaksi.kode}</td>
-					<td>{getOnlyDate(transaksi.tgl)}</td>
-					<td>{transaksi.cust_id}</td>
-					<td>{transaksi.subtotal}</td>
-					<td>{transaksi.diskon}</td>
-					<td>{transaksi.ongkir}</td>
-					<td>{transaksi.total_bayar}</td>
+					<td colspan="8" class="text-center">loading...</td>
 				</tr>
-			{/each}
-		{:else}
-			<tr>
-				<td colspan="8" class="text-center">emmpty data</td>
-			</tr>
-		{/if}
-	</tbody>
-</table>
+			{:else if data.length}
+				{#each data as transaksi, index}
+					<tr>
+						<td>{index + 1}</td>
+						<td>{transaksi.kode}</td>
+						<td>{getOnlyDate(transaksi.tgl)}</td>
+						<td>{transaksi.cust_id}</td>
+						<td>{transaksi.subtotal}</td>
+						<td>{transaksi.diskon}</td>
+						<td>{transaksi.ongkir}</td>
+						<td>{transaksi.total_bayar}</td>
+					</tr>
+				{/each}
+			{:else}
+				<tr>
+					<td colspan="8" class="text-center">emmpty data</td>
+				</tr>
+			{/if}
+		</tbody>
+	</table>
+</div>

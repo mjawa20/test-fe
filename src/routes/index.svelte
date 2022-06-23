@@ -23,6 +23,8 @@
 	let customers = [];
 	let barangs = [];
 	let loading = false;
+	let show = false;
+	let methodType = 'post';
 
 	let sales = {
 		tgl: '',
@@ -86,7 +88,7 @@
 			await postSales($cart, kode);
 			alert('Sukses menyimpan barang');
 			browser && localStorage.removeItem('cart');
-			location.reload()
+			location.reload();
 		} else {
 			alert('gagal, kolom tanggal dan cutomer harus diisi');
 		}
@@ -100,6 +102,27 @@
 		setNewCart(JSON.stringify(filteredCart));
 	};
 
+	const handleUpdate = () => {
+		const filteredCart = $cart.filter((item) => {
+			return item.id !== salesDets.id;
+		});
+		let newData = $cart ? JSON.stringify([salesDets, ...filteredCart]) : JSON.stringify([salesDets]);
+		setNewCart(newData);
+		alert('update success')
+	};
+
+	const showUpdate = (event) => {
+		methodType = 'update';
+		show = true;
+		const filteredCart = $cart.filter((item) => {
+			return item.id == event.detail;
+		});
+		console.log(filteredCart, '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
+		salesDets.qty = filteredCart[0].qty;
+		salesDets.diskon_pct = filteredCart[0].diskon_pct;
+		salesDets.barang_id = filteredCart[0].barang_id;
+	};
+
 	$: {
 		if ($cart) {
 			sales.subtotal = countSubTotal($cart);
@@ -110,12 +133,27 @@
 		sales.ongkir = inputNumberLimit(sales.ongkir, 9999999999, 0);
 		sales.total_bayar = countTotalBayar(sales);
 	}
+	$: {
+		if (methodType === 'post') {
+			salesDets = {
+				id: null,
+				sales_id: null,
+				barang_id: null,
+				harga_bandrol: 0,
+				qty: null,
+				diskon_pct: null,
+				diskon_nilai: 0,
+				harga_diskon: 0,
+				total: 0
+			};
+		}
+	}
 </script>
 
 <div class="w-full md:w-1/2 space-y-3">
-	<div class="bg-slate-200 ">Transaksi</div>
+	<div class="bg-slate-200 p-2 font-medium ">Transaksi</div>
 	<div class="flex items-center">
-		<p style="min-width: 100px;">tanggal</p>
+		<p style="min-width: 100px;" class="text-sm font-medium">Tanggal</p>
 		<input
 			bind:value={sales.tgl}
 			type="date"
@@ -124,8 +162,8 @@
 		border border-gray-300 text-xs font-bold px-2 py-2 w-full rounded-md"
 		/>
 	</div>
-	<div class="flex ">
-		<p style="min-width: 100px;">Customer</p>
+	<div class="flex items-center ">
+		<p style="min-width: 100px;" class="text-sm font-medium">Customer</p>
 		<select
 			bind:value={sales.cust_id}
 			class="
@@ -140,10 +178,12 @@
 	</div>
 </div>
 
-<div class="flex items-center justify-between my-3">
-	<h1>Keranjang</h1>
+<div class="flex items-center justify-between mt-5 mb-2">
+	<h1 class="text-base font-medium">Keranjang</h1>
 	<Modal
-		on:submit={handleAddCart}
+		bind:show
+		on:submit={methodType == 'post' ? handleAddCart : handleUpdate}
+		bind:methodType
 		title="cart"
 		isValid={validate(salesDets, [
 			'sales_id',
@@ -182,6 +222,7 @@
 <Cart
 	cart={$cart}
 	{barangs}
+	on:update={showUpdate}
 	on:delete={handleDelete}
 	on:save={handleSave}
 	{sales}
