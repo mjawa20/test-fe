@@ -1,6 +1,10 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
+
 	export let barang;
 	export let cart;
+
+	const dispatch = createEventDispatcher();
 	$: console.log(cart, 'asd');
 	$: console.log(barang, '------------');
 </script>
@@ -20,7 +24,7 @@
 				{/if}
 			</div>
 			<div>
-				<button>hapus</button>
+				<button on:click={() => dispatch('delete', cart.id)}>hapus</button>
 				<button>ubah</button>
 			</div>
 		</div>
@@ -33,5 +37,5 @@
 		</div>
 	</div>
 {:else}
-	klajs
+	Loading...
 {/if}

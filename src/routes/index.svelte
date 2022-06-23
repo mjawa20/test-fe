@@ -9,6 +9,7 @@
 	import { barang, fetchbarang } from '../store/barang';
 	import { getBarang, validate } from '../utils';
 	import { browser } from '$app/env';
+	import { uid } from 'uid';
 
 	let customers = [];
 	let barangs = [];
@@ -24,6 +25,7 @@
 	};
 
 	let salesDets = {
+		id: null,
 		sales_id: null,
 		barang_id: null,
 		harga_bandrol: 0,
@@ -47,20 +49,33 @@
 		loading = false;
 	};
 
+	const setNewCart = (newData) => {
+		browser && localStorage.setItem('cart', newData);
+		cart.set(JSON.parse(newData));
+	};
+
 	const handleAddCart = () => {
 		const selectedBarang = getBarang(barangs, salesDets.barang_id)[0];
 
+		salesDets.id = uid(8);
 		salesDets.harga_bandrol = selectedBarang.harga;
 		salesDets.diskon_nilai = Math.round(selectedBarang.harga * (salesDets.diskon_pct / 100));
 		salesDets.harga_diskon = salesDets.harga_bandrol - salesDets.diskon_nilai;
 		salesDets.total = salesDets.harga_diskon * salesDets.qty;
-		let newData = $cart.length
-			? JSON.stringify([salesDets, ...$cart])
-			: JSON.stringify([salesDets]);
 
-		browser && localStorage.setItem('cart', newData);
-		cart.set(JSON.parse(newData));
+		let newData = $cart ? JSON.stringify([salesDets, ...$cart]) : JSON.stringify([salesDets]);
+		setNewCart(newData);
 	};
+
+	const handleDelete = (event) => {
+		const filteredCart = $cart.filter((item) => {
+			console.log(item.id, 'blblblblb',event.detail);
+			return item.id !== event.detail;
+		});
+		console.log('-----------=---------------', filteredCart, '-----', event.detail);
+		setNewCart(JSON.stringify(filteredCart));
+	};
+
 	$: console.log($cart);
 </script>
 
@@ -131,7 +146,7 @@
 {#if $cart.length}
 	<div class="py-4 grid gap-4 md:grid-cols-2 grid-cols-1 my-5">
 		{#each $cart as cart}
-			<Cart {cart} barang={getBarang(barangs, cart.barang_id)[0]} />
+			<Cart on:delete={handleDelete} {cart} barang={getBarang(barangs, cart.barang_id)[0]} />
 		{/each}
 	</div>
 	<hr />
@@ -161,29 +176,3 @@
 		<button class="bg-slate-200 p-2 rounded mt-2">Tambah Keranjang </button>
 	</div>
 {/if}
-
-<!-- <table class="table-auto w-full">
-	<thead class="bg-slate-200">
-		<tr>
-			<th width="10%"><Modal /></th>
-			<th width="5%">No</th>
-			<th width="15%">Kode</th>
-			<th width="20%">Nama</th>
-			<th width="10%">qty</th>
-			<th>Diskon(%)</th>
-			<th>Diskon(Rp)</th>
-			<th>Harga diskon</th>
-			<th>Total</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>
-				<a href="">Hapus</a>
-			</td>
-			<td>1</td>
-			<td>12eqwt66</td>
-			<td>Malcolm Lockyer</td>
-		</tr>
-	</tbody>
-</table> -->
