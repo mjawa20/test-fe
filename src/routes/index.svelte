@@ -83,7 +83,6 @@
 	const handleSave = async () => {
 		loading = true;
 		if (sales.cust_id || sales.tgl) {
-			console.log(sales);
 			const res = await postTransaksi(sales);
 			const kode = await res.data.kode;
 			await postSales($cart, kode);
@@ -118,7 +117,6 @@
 		const filteredCart = $cart.filter((item) => {
 			return item.id == event.detail;
 		});
-		console.log(filteredCart, '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
 		salesDets.id = filteredCart[0].id;
 		salesDets.qty = filteredCart[0].qty;
 		salesDets.diskon_pct = filteredCart[0].diskon_pct;

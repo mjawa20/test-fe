@@ -5,8 +5,6 @@
 	export let cart;
 
 	const dispatch = createEventDispatcher();
-	$: console.log(cart, 'asd');
-	$: console.log(barang, '------------');
 </script>
 
 {#if cart && barang}

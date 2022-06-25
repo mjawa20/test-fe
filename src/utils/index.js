@@ -11,8 +11,6 @@ export const validate = (data, excludes = []) => {
 }
 
 export const getBarang = (barangs, id) => {
-  console.log(barangs);
-  console.log(id);
   return barangs.filter((item) => item.id == id);
 };
 
