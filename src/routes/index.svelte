@@ -28,7 +28,7 @@
 
 	let sales = {
 		tgl: '',
-		cust_id: 0,
+		mcustomer_id: 0,
 		subtotal: 0,
 		diskon: 0,
 		ongkir: 0,
@@ -83,6 +83,7 @@
 	const handleSave = async () => {
 		loading = true;
 		if (sales.cust_id || sales.tgl) {
+			console.log(sales);
 			const res = await postTransaksi(sales);
 			const kode = await res.data.kode;
 			await postSales($cart, kode);
@@ -108,7 +109,7 @@
 		});
 		let newData = $cart ? JSON.stringify([salesDets, ...filteredCart]) : JSON.stringify([salesDets]);
 		setNewCart(newData);
-		alert('update success')
+		alert('Sukses Update');
 	};
 
 	const showUpdate = (event) => {
@@ -118,6 +119,7 @@
 			return item.id == event.detail;
 		});
 		console.log(filteredCart, '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
+		salesDets.id = filteredCart[0].id;
 		salesDets.qty = filteredCart[0].qty;
 		salesDets.diskon_pct = filteredCart[0].diskon_pct;
 		salesDets.barang_id = filteredCart[0].barang_id;
@@ -165,7 +167,7 @@
 	<div class="flex items-center ">
 		<p style="min-width: 100px;" class="text-sm font-medium">Customer</p>
 		<select
-			bind:value={sales.cust_id}
+			bind:value={sales.mcustomer_id}
 			class="
 		disabled:bg-slate-100
 		border border-gray-300 text-xs font-bold px-2 py-2 w-full rounded-md"

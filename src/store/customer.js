@@ -29,9 +29,12 @@ export const deleteCustomer = async (id) => {
 	}
 }
 
-export const updatecarousel = async (newcarousel) => {
+export const getCustomerById = async (id) => {
 	try {
-		await axios.put('/api/carousel/',newcarousel)
+		const res = await axios.get('http://127.0.0.1:8000/api/customer/' + id)
+		const data = await res.data;
+		return res.data.data;
+
 	} catch (error) {
 		console.error(error.response);
 	}

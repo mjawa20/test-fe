@@ -1,9 +1,11 @@
 <script>
 	import { onMount } from 'svelte';
 	import { fetchtransaksi, transaksi } from '../store/transaksi';
+	import { customer, fetchcustomer } from '../store/customer';
 
 	let loading = false;
-	let data = [];
+	let transaksis = [];
+	let customers = [];
 	let cari = '';
 
 	const getOnlyDate = (date) => {
@@ -14,15 +16,27 @@
 		loading = true;
 
 		await fetchtransaksi();
-		data = $transaksi;
+		await fetchcustomer();
+		customers = $customer;
+		transaksis = $transaksi;
 
 		loading = false;
 	};
+
+	const makeCode = (date, code) => {
+		date = date.split('-');
+		return date[0] + date[1]+ '-' + code;
+	};
+
+	const getCustomer = (id) => {
+		let data = customers.filter((item) => item.id == id);
+		return data[0];
+	};
 	$: {
 		if (cari) {
-			data = data.filter((item) => item.kode.toLowerCase().includes(cari.toLowerCase()));
+			transaksis = data.filter((item) => item.kode.toLowerCase().includes(cari.toLowerCase()));
 		} else {
-			data = [...$transaksi];
+			transaksis = [...transaksis];
 		}
 	}
 </script>
@@ -34,13 +48,13 @@
 	</div>
 </div>
 <div class="overflow-x-auto">
-	<table style="min-width: 700px;" class="table-auto w-full">
+	<table style="min-width: 950px;" class="table-auto w-full">
 		<thead class="bg-slate-200">
 			<tr>
 				<th width="5%">No</th>
-				<th width="10%">Kode</th>
+				<th width="13%">Kode</th>
 				<th width="15%">tanggal</th>
-				<th width="20%">Nama Customer</th>
+				<th width="17%">Nama Customer</th>
 				<th width="13%">SubTotal</th>
 				<th width="11%">Diskon</th>
 				<th width="11%">ongkir</th>
@@ -52,13 +66,13 @@
 				<tr>
 					<td colspan="8" class="text-center">loading...</td>
 				</tr>
-			{:else if data.length}
-				{#each data as transaksi, index}
+			{:else if transaksis.length && customers.length}
+				{#each transaksis as transaksi, index}
 					<tr>
 						<td>{index + 1}</td>
-						<td>{transaksi.kode}</td>
+						<td>{makeCode(transaksi.tgl, transaksi.kode)}</td>
 						<td>{getOnlyDate(transaksi.tgl)}</td>
-						<td>{transaksi.cust_id}</td>
+						<td>{getCustomer(1).nama}</td>
 						<td>{transaksi.subtotal}</td>
 						<td>{transaksi.diskon}</td>
 						<td>{transaksi.ongkir}</td>
