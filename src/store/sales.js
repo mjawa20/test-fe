@@ -3,9 +3,12 @@ import { writable } from 'svelte/store';
 
 export const sales = writable([]);
 
+const url = 'https://test-jawa.000webhostapp.com/api/sales';
+
+
 export const fetchSales = async () => {
 	try {
-		const res = await axios.get(`http://127.0.0.1:8000/api/sales`);
+		const res = await axios.get(url);
 		const body = await res.data;
 		sales.set(body.data);
 	} catch (error) {
@@ -18,7 +21,7 @@ export const postSales = async (newSales, kode) => {
 			transaksi_kode: kode,
 			data: newSales,
 		}
-		await axios.post(`http://127.0.0.1:8000/api/sales`, data);
+		await axios.post(url, data);
 	} catch (error) {
 		console.error(error.response);
 	}

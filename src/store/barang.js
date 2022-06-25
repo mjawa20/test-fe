@@ -3,9 +3,11 @@ import { writable } from 'svelte/store';
 
 export const barang = writable([]);
 
+const url = 'https://test-jawa.000webhostapp.com/api/barang';
+
 export const fetchbarang = async () => {
 	try {
-		const res = await axios.get(`http://127.0.0.1:8000/api/barang`);
+		const res = await axios.get(url);
 		const body = await res.data;
 		barang.set(body.data);
 	} catch (error) {
@@ -15,7 +17,7 @@ export const fetchbarang = async () => {
 
 export const postBarang = async (newBarang) => {
 	try {
-		await axios.post('http://127.0.0.1:8000/api/barang', newBarang)
+		await axios.post(url, newBarang)
 	} catch (error) {
 		console.error(error.response);
 	}

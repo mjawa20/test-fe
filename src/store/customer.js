@@ -3,9 +3,12 @@ import { writable } from 'svelte/store';
 
 export const customer = writable([]);
 
+const url = 'https://test-jawa.000webhostapp.com/api/customer';
+
+
 export const fetchcustomer = async () => {
 	try {
-		const res = await axios.get(`http://127.0.0.1:8000/api/customer`);
+		const res = await axios.get(url);
 		const body = await res.data;
 		customer.set(body.data);
 	} catch (error) {
@@ -15,7 +18,7 @@ export const fetchcustomer = async () => {
 
 export const postCustomer = async (newcustomer) => {
 	try {
-		await axios.post('http://127.0.0.1:8000/api/customer', newcustomer);
+		await axios.post(url, newcustomer);
 	} catch (error) {
 		console.error(error.response);
 	}
@@ -23,7 +26,7 @@ export const postCustomer = async (newcustomer) => {
 
 export const deleteCustomer = async (id) => {
 	try {
-		await axios.delete('http://127.0.0.1:8000/api/customer/' + id)
+		await axios.delete(url + '/' + id)
 	} catch (error) {
 		console.error(error.response);
 	}
@@ -31,7 +34,7 @@ export const deleteCustomer = async (id) => {
 
 export const getCustomerById = async (id) => {
 	try {
-		const res = await axios.get('http://127.0.0.1:8000/api/customer/' + id)
+		const res = await axios.get(url + '/' + id)
 		const data = await res.data;
 		return res.data.data;
 
