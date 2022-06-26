@@ -1,6 +1,6 @@
 <script>
 	import Modal from '$lib/utils/Modal.svelte';
-	import { barang, fetchbarang, postBarang } from '../store/barang';
+	import { barang, deletebarang, fetchbarang, postBarang, updateBarang } from '../store/barang';
 	import { onMount } from 'svelte';
 	import Input from '$lib/utils/Input.svelte';
 	import { validate } from '../utils';
@@ -11,6 +11,7 @@
 	let isUpload = false;
 	let show = false;
 	let err = false;
+	let methodType = 'post';
 
 	onMount(async () => await onLoad());
 	const onLoad = async () => {
@@ -23,6 +24,7 @@
 	};
 
 	let newBarang = {
+		id: null,
 		nama: '',
 		harga: null
 	};
@@ -35,6 +37,23 @@
 		await onLoad();
 
 		isUpload = false;
+		alert('data berhasil ditambahkan');
+	};
+
+	const handleDelete = async (id) => {
+		await deletebarang(id);
+		alert('delete success');
+		await onLoad();
+	};
+
+	const handleUpdate = async () => {
+		isUpload = true;
+		await updateBarang(newCustomer);
+		show = false;
+
+		isUpload = false;
+		alert('data berhasil diupdate');
+		await onLoad();
 	};
 
 	$: {
@@ -44,11 +63,21 @@
 			data = [...$barang];
 		}
 	}
+	$: {
+		if (methodType === 'post') {
+			newBarang = {
+				id: null,
+				nama: '',
+				harga: ''
+			};
+		}
+	}
 </script>
 
 <div class="flex flex-col md:flex-row md:justify-between mb-5">
 	<Modal
-		on:submit={handlePost}
+		bind:methodType
+		on:submit={methodType == 'post' ? handlePost : handleUpdate}
 		bind:show
 		title="Barang"
 		{isUpload}
@@ -81,13 +110,14 @@
 	</div>
 </div>
 <div class="overflow-x-auto">
-	<table style="min-width: 400px;" class="table-auto w-full border-collapse">
+	<table style="min-width: 600px;" class="table-auto w-full border-collapse">
 		<thead class="bg-slate-200">
 			<tr>
 				<th width="10%">No</th>
-				<th width="24%">Kode</th>
-				<th width="30%">Nama</th>
+				<th width="20%">Kode</th>
+				<th width="25%">Nama</th>
 				<th width="25%">Harga</th>
+				<th width="20%">action</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -97,11 +127,27 @@
 				</tr>
 			{:else if data.length}
 				{#each data as barang, index}
-					<tr>
+					<tr class="my-5">
 						<td>{index + 1}</td>
 						<td>{barang.kode}</td>
 						<td>{barang.nama}</td>
 						<td>Rp{barang.harga}</td>
+						<td
+							><button
+								on:click={() => handleDelete(barang.id)}
+								class="bg-red-500 text-white rounded p-1 text-sm">Delete</button
+							>
+							<button
+								on:click={() => {
+									methodType = 'update';
+									newBarang.id = barang.id;
+									newBarang.nama = barang.nama;
+									newBarang.harga = barang.harga;
+									show = true;
+								}}
+								class="bg-green-500 text-white rounded p-1 text-sm">Update</button
+							>
+						</td>
 					</tr>
 				{/each}
 			{:else if !data.length}

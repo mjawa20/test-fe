@@ -25,7 +25,7 @@
 	const dispatch = createEventDispatcher();
 </script>
 
-<button on:click={handleShow} class=" py-2 text-sm rounded font-medium hover:text-slate-500"
+<button on:click={handleShow} class="bg-slate-200 p-2 text-sm rounded font-medium hover:text-slate-500"
 	>Tambah {title}</button
 >
 {#if show}

@@ -3,14 +3,14 @@ import { writable } from 'svelte/store';
 
 export const transaksi = writable([]);
 
-const url = 'https://test-jawa.000webhostapp.com/api/transaksi';
+const url = 'https://7090-114-142-173-3.ap.ngrok.io/api/transaction';
 
 
 export const fetchtransaksi = async () => {
 	try {
 		const res = await axios.get(url);
 		const body = await res.data;
-		transaksi.set(body.data);
+		transaksi.set(body);
 	} catch (error) {
 		console.error(error.response);
 	}

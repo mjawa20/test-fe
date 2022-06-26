@@ -11,6 +11,7 @@
 	export let sales;
 	export let diskon;
 	export let ongkir;
+	export let show;
 
 	const dispatch = createEventDispatcher();
 </script>
@@ -66,6 +67,8 @@
 {:else}
 	<div class="text-center my-10">
 		<p>Keranjang Kosong harap tambahkan Keranjang</p>
-		<button class="bg-slate-200 p-2 rounded mt-2">Tambah Keranjang </button>
+		<button on:click={() => (show = true)} class="bg-slate-200 p-2 rounded mt-2"
+			>Tambah Keranjang
+		</button>
 	</div>
 {/if}

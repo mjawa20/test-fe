@@ -84,10 +84,12 @@
 		loading = true;
 		if (sales.cust_id || sales.tgl) {
 			const res = await postTransaksi(sales);
-			const kode = await res.data.kode;
-			await postSales($cart, kode);
-			alert('Sukses menyimpan barang');
+			const id = res.id;
+			await postSales($cart, id);
+
 			browser && localStorage.removeItem('cart');
+			show = false;
+			alert('Sukses menyimpan barang');
 			location.reload();
 		} else {
 			alert('gagal, kolom tanggal dan cutomer harus diisi');
@@ -106,7 +108,9 @@
 		const filteredCart = $cart.filter((item) => {
 			return item.id !== salesDets.id;
 		});
-		let newData = $cart ? JSON.stringify([salesDets, ...filteredCart]) : JSON.stringify([salesDets]);
+		let newData = $cart
+			? JSON.stringify([salesDets, ...filteredCart])
+			: JSON.stringify([salesDets]);
 		setNewCart(newData);
 		alert('Sukses Update');
 	};
@@ -228,4 +232,5 @@
 	{sales}
 	bind:diskon={sales.diskon}
 	bind:ongkir={sales.ongkir}
+	bind:show
 />

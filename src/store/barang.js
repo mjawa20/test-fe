@@ -3,13 +3,13 @@ import { writable } from 'svelte/store';
 
 export const barang = writable([]);
 
-const url = 'https://test-jawa.000webhostapp.com/api/barang';
+const url = 'https://7090-114-142-173-3.ap.ngrok.io/api/barang';
 
 export const fetchbarang = async () => {
 	try {
 		const res = await axios.get(url);
 		const body = await res.data;
-		barang.set(body.data);
+		barang.set(body);
 	} catch (error) {
 		console.error(error.response);
 	}
@@ -23,9 +23,16 @@ export const postBarang = async (newBarang) => {
 	}
 }
 
-// export const fetchCarousel = async (query) => {
+export const deletebarang = async (id) => {
+	try {
+		await axios.delete(url + '/' + id);
+	} catch (error) {
+		console.error(error.response);
+	}
+}
+// export const fetchbarang = async (query) => {
 // 	try {
-// 		const res = await axios.get(`/api/carousel/${query}}`);
+// 		const res = await axios.get(`/api/barang/${query}}`);
 // 		const body = await res.data;
 // 		customer.set(body.data);
 // 	} catch (error) {
@@ -34,18 +41,11 @@ export const postBarang = async (newBarang) => {
 // };
 
 
-// export const deletecarousel = async (id) => {
-// 	try {
-// 		await axios.delete('/api/carousel/' + id)
-// 	} catch (error) {
-// 		console.error(error.response);
-// 	}
-// }
 
-// export const updatecarousel = async (newcarousel) => {
-// 	try {
-// 		await axios.put('/api/carousel/',newcarousel)
-// 	} catch (error) {
-// 		console.error(error.response);
-// 	}
-// }
+export const updateBarang = async (barang) => {
+	try {
+		await axios.put(url + '/' + barang.id, barang);
+	} catch (error) {
+		console.error(error.response);
+	}
+}

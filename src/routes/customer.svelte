@@ -1,6 +1,12 @@
 <script>
 	import Modal from '$lib/utils/Modal.svelte';
-	import { customer, deleteCustomer, fetchcustomer, postCustomer } from '../store/customer';
+	import {
+		customer,
+		deleteCustomer,
+		fetchcustomer,
+		postCustomer,
+		updateCustomer
+	} from '../store/customer';
 	import { onMount } from 'svelte';
 	import Input from '$lib/utils/Input.svelte';
 	import { validate } from '../utils';
@@ -11,7 +17,9 @@
 	let err = false;
 	let isUpload = false;
 	let show = false;
+	let methodType = 'post';
 	let newCustomer = {
+		id:null,
 		nama: '',
 		telp: ''
 	};
@@ -34,6 +42,22 @@
 		await onLoad();
 
 		isUpload = false;
+		alert('data berhasil ditambahkan');
+	};
+	const handleDelete = async (id) => {
+		await deleteCustomer(id);
+		alert('delete success');
+		await onLoad();
+	};
+
+	const handleUpdate = async () => {
+		isUpload = true;
+		await updateCustomer(newCustomer);
+		show = false;
+		
+		isUpload = false;
+		alert('data berhasil diupdate');
+		await onLoad();
 	};
 
 	$: {
@@ -43,14 +67,24 @@
 			data = [...$customer];
 		}
 	}
+	$: {
+		if (methodType === 'post') {
+			newCustomer = {
+				id:null,
+				nama: '',
+				telp: ''
+			};
+		}
+	}
 </script>
 
 <div class="flex flex-col md:flex-row md:justify-between mb-5">
 	<Modal
-		on:submit={handlePost}
+		on:submit={methodType == 'post' ? handlePost : handleUpdate}
 		bind:show
 		title="Customer"
 		{isUpload}
+		bind:methodType
 		isValid={validate(newCustomer)}
 	>
 		<div class="px-5 mt-3">
@@ -79,33 +113,52 @@
 		<input placeholder="Cari" type="text" class="border p-1 rounded w-full" bind:value={cari} />
 	</div>
 </div>
-<table class="table-auto w-full">
-	<thead class="bg-slate-200">
-		<tr>
-			<th width="10%">No</th>
-			<th width="24%">Kode</th>
-			<th width="40%">Nama</th>
-			<th width="25%">Telp</th>
-		</tr>
-	</thead>
-	<tbody>
-		{#if loading}
+<div class="overflow-y-auto">
+	<table style="min-width: 600px;" class="table-auto w-full ">
+		<thead class="bg-slate-200">
 			<tr>
-				<td colspan="4" class="text-center">loading...</td>
+				<th width="10%">No</th>
+				<th width="25%">Kode</th>
+				<th width="25%">Nama</th>
+				<th width="20%">Telp</th>
+				<th width="20%">action</th>
 			</tr>
-		{:else if data.length}
-			{#each data as customer, index}
+		</thead>
+		<tbody>
+			{#if loading}
 				<tr>
-					<td>{index + 1}</td>
-					<td>{customer.kode}</td>
-					<td>{customer.nama}</td>
-					<td>{customer.telp}</td>
+					<td colspan="5" class="text-center">loading...</td>
 				</tr>
-			{/each}
-		{:else}
-			<tr>
-				<td colspan="4" class="text-center">emmpty data</td>
-			</tr>
-		{/if}
-	</tbody>
-</table>
+			{:else if data.length}
+				{#each data as customer, index}
+					<tr>
+						<td>{index + 1}</td>
+						<td>{customer.kode}</td>
+						<td>{customer.nama}</td>
+						<td>{customer.telp}</td>
+						<td class="text-center">
+							<button
+								on:click={() => handleDelete(customer.id)}
+								class="bg-red-500 text-white rounded p-1 text-sm">Delete</button
+							>
+							<button
+								on:click={() => {
+									methodType = 'update';
+									newCustomer.id = customer.id;
+									newCustomer.nama = customer.nama;
+									newCustomer.telp = customer.telp;
+									show = true;
+								}}
+								class="bg-green-500 text-white rounded p-1 text-sm">Update</button
+							>
+						</td>
+					</tr>
+				{/each}
+			{:else}
+				<tr>
+					<td colspan="5" class="text-center">emmpty data</td>
+				</tr>
+			{/if}
+		</tbody>
+	</table>
+</div>

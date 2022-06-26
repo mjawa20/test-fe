@@ -9,7 +9,7 @@
 	let cari = '';
 
 	const getOnlyDate = (date) => {
-		return date.split(' ')[0];
+		return date.split('T')[0];
 	};
 	onMount(async () => await onLoad());
 	const onLoad = async () => {
@@ -72,7 +72,7 @@
 						<td>{index + 1}</td>
 						<td>{makeCode(transaksi.tgl, transaksi.kode)}</td>
 						<td>{getOnlyDate(transaksi.tgl)}</td>
-						<td>{getCustomer(1).nama}</td>
+						<td>{getCustomer(transaksi.mcustomer_id).nama}</td>
 						<td>{transaksi.subtotal}</td>
 						<td>{transaksi.diskon}</td>
 						<td>{transaksi.ongkir}</td>

@@ -3,14 +3,14 @@ import { writable } from 'svelte/store';
 
 export const customer = writable([]);
 
-const url = 'https://test-jawa.000webhostapp.com/api/customer';
+const url = 'https://7090-114-142-173-3.ap.ngrok.io/api/customers';
 
 
 export const fetchcustomer = async () => {
 	try {
 		const res = await axios.get(url);
 		const body = await res.data;
-		customer.set(body.data);
+		customer.set(body);
 	} catch (error) {
 		console.error(error.response);
 	}
@@ -27,6 +27,13 @@ export const postCustomer = async (newcustomer) => {
 export const deleteCustomer = async (id) => {
 	try {
 		await axios.delete(url + '/' + id)
+	} catch (error) {
+		console.error(error.response);
+	}
+}
+export const updateCustomer = async (customer) => {
+	try {
+		await axios.put(url + '/' + customer.id, customer);
 	} catch (error) {
 		console.error(error.response);
 	}

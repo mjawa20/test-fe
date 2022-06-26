@@ -3,7 +3,7 @@ import { writable } from 'svelte/store';
 
 export const sales = writable([]);
 
-const url = 'https://test-jawa.000webhostapp.com/api/sales';
+const url = 'https://7090-114-142-173-3.ap.ngrok.io/api/sales';
 
 
 export const fetchSales = async () => {
