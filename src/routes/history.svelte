@@ -2,7 +2,9 @@
 	import { onMount } from 'svelte';
 	import { fetchtransaksi, transaksi } from '../store/transaksi';
 	import { customer, fetchcustomer } from '../store/customer';
+	import SelectItem from '$lib/utils/SelectItem.svelte';
 
+	let browse = null;
 	let loading = false;
 	let transaksis = [];
 	let customers = [];
@@ -25,7 +27,7 @@
 
 	const makeCode = (date, code) => {
 		date = date.split('-');
-		return date[0] + date[1]+ '-' + code;
+		return date[0] + date[1] + '-' + code;
 	};
 
 	const getCustomer = (id) => {
@@ -34,14 +36,24 @@
 	};
 	$: {
 		if (cari) {
-			transaksis = data.filter((item) => item.kode.toLowerCase().includes(cari.toLowerCase()));
+			transaksis = transaksis.filter((item) =>
+				item.kode.toLowerCase().includes(cari.toLowerCase())
+			);
 		} else {
-			transaksis = [...transaksis];
+			transaksis = [...$transaksi];
+		}
+
+		if (browse) {
+			transaksis = transaksis.filter((item) => item.mcustomer_id == browse);
+		} else {
+			console.log(browse);
+			transaksis = [...$transaksi];
 		}
 	}
 </script>
 
-<div class="md:flex md:justify-end mb-5">
+<div class="md:flex md:justify-between mb-5">
+	<SelectItem title="browse" data={customers} bind:value={browse} />
 	<div class="flex items-center mt-2 md:mt-0">
 		<p class="md:block hidden md:mr-3">Cari</p>
 		<input placeholder="Cari" type="text" class="border p-1 rounded w-full" bind:value={cari} />

@@ -3,7 +3,7 @@ import { writable } from 'svelte/store';
 
 export const barang = writable([]);
 
-const url = 'https://7090-114-142-173-3.ap.ngrok.io/api/barang';
+const url = 'https://test-be-jawa.herokuapp.com/api/barang';
 
 export const fetchbarang = async () => {
 	try {
@@ -30,6 +30,7 @@ export const deletebarang = async (id) => {
 		console.error(error.response);
 	}
 }
+
 // export const fetchbarang = async (query) => {
 // 	try {
 // 		const res = await axios.get(`/api/barang/${query}}`);

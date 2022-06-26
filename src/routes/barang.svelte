@@ -3,7 +3,7 @@
 	import { barang, deletebarang, fetchbarang, postBarang, updateBarang } from '../store/barang';
 	import { onMount } from 'svelte';
 	import Input from '$lib/utils/Input.svelte';
-	import { validate } from '../utils';
+	import { inputNumberLimit, validate } from '../utils';
 
 	let loading = false;
 	let data = [];
@@ -48,7 +48,7 @@
 
 	const handleUpdate = async () => {
 		isUpload = true;
-		await updateBarang(newCustomer);
+		await updateBarang(newBarang);
 		show = false;
 
 		isUpload = false;
@@ -62,6 +62,7 @@
 		} else {
 			data = [...$barang];
 		}
+		newBarang.harga = inputNumberLimit(newBarang.harga, 9999999999, 0);
 	}
 	$: {
 		if (methodType === 'post') {
