@@ -54,6 +54,8 @@
 
 	const handleUpdate = async () => {
 		isUpload = true;
+		newCustomer.telp = '62' + newCustomer.telp;
+
 		await updateCustomer(newCustomer);
 		show = false;
 
