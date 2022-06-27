@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import Input from '$lib/utils/Input.svelte';
 	import { inputNumberLimit, validate } from '../utils';
+import { browser } from '$app/env';
 
 	let loading = false;
 	let data = [];
@@ -41,9 +42,14 @@
 	};
 
 	const handleDelete = async (id) => {
-		await deletebarang(id);
-		alert('delete success');
-		await onLoad();
+		if (confirm('Apakah Anda ingin menghapusnya?') === true) {
+			await deletebarang(id);
+			alert('delete success');
+			await onLoad();
+			browser && localStorage.removeItem('cart');
+			location.reload()
+		}
+		
 	};
 
 	const handleUpdate = async () => {

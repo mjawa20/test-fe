@@ -19,7 +19,7 @@
 	let show = false;
 	let methodType = 'post';
 	let newCustomer = {
-		id:null,
+		id: null,
 		nama: '',
 		telp: ''
 	};
@@ -36,7 +36,7 @@
 
 	const handlePost = async () => {
 		isUpload = true;
-
+		newCustomer.telp = '62' + newCustomer.telp;
 		await postCustomer(newCustomer);
 		show = false;
 		await onLoad();
@@ -45,16 +45,18 @@
 		alert('data berhasil ditambahkan');
 	};
 	const handleDelete = async (id) => {
-		await deleteCustomer(id);
-		alert('delete success');
-		await onLoad();
+		if (confirm('Apakah anda ingin menghapusnya') === true) {
+			await deleteCustomer(id);
+			alert('delete success');
+			await onLoad();
+		}
 	};
 
 	const handleUpdate = async () => {
 		isUpload = true;
 		await updateCustomer(newCustomer);
 		show = false;
-		
+
 		isUpload = false;
 		alert('data berhasil diupdate');
 		await onLoad();
@@ -70,7 +72,7 @@
 	$: {
 		if (methodType === 'post') {
 			newCustomer = {
-				id:null,
+				id: null,
 				nama: '',
 				telp: ''
 			};
@@ -92,17 +94,18 @@
 			<label for="" class="mr-10"
 				>Phone
 
-				<input
-					min="0"
-					type="number"
-					bind:value={newCustomer.telp}
-					on:focus={() => (err = true)}
-					class="disabled:bg-slate-100 mt-1 px-3 py-2 bg-white border  {err && !newCustomer.telp
-						? 'border-red-600 text-red-600 placeholder:text-red-600'
-						: 'border-slate-300'} block w-full rounded-md sm:text-sm "
-					{isUpload}
-				/>
-				{#if err && !newCustomer.telp}
+				<div class="flex items-center rounded">
+					+62
+					<input
+						type="number"
+						bind:value={newCustomer.telp}
+						class="ml-2 disabled:bg-slate-100 mt-1 px-3 py-2 bg-white border {err
+							? 'border-red-600 text-red-600 placeholder:text-red-600'
+							: 'border-slate-300'} block w-full rounded-md sm:text-sm "
+						{isUpload}
+					/>
+				</div>
+				{#if err}
 					<p class="text-xs text-red-600 mt-1">This field Must filled</p>
 				{/if}
 			</label>
